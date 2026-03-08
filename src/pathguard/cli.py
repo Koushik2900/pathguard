@@ -1,15 +1,19 @@
 import sys
 
 from pathguard.config import get_settings
+from pathguard.collector import AWSNetworkCollector
 
 
-def analyze() -> int:
+def analyze():
     settings = get_settings()
-    print("PathGuard initialized")
-    print(f"AWS region: {settings.aws_region}")
-    print(f"Output path: {settings.output_path}")
-    return 0
 
+    collector = AWSNetworkCollector(region=settings.aws_region)
+    data = collector.collect_all()
+
+    print("PathGuard inventory summary")
+    print(f"Region: {settings.aws_region}")
+    print(f"VPCs found: {len(data['vpcs'])}")
+    print(f"Subnets found: {len(data['subnets'])}")
 
 def main() -> int:
     if len(sys.argv) < 2:

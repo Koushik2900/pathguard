@@ -1,35 +1,43 @@
+import boto3
+
+
 class AWSNetworkCollector:
-    def __init__(self, region: str) -> None:
+    def __init__(self, region: str):
         self.region = region
+        self.ec2 = boto3.client("ec2", region_name=region)
 
     def collect_vpcs(self):
-        return []
+        response = self.ec2.describe_vpcs()
+
+        vpcs = []
+        for vpc in response.get("Vpcs", []):
+            vpcs.append({
+                "vpc_id": vpc.get("VpcId"),
+                "cidr_block": vpc.get("CidrBlock"),
+                "state": vpc.get("State"),
+                "tags": vpc.get("Tags", [])
+            })
+
+        return vpcs
 
     def collect_subnets(self):
-        return []
+        response = self.ec2.describe_subnets()
 
-    def collect_route_tables(self):
-        return []
+        subnets = []
+        for subnet in response.get("Subnets", []):
+            subnets.append({
+                "subnet_id": subnet.get("SubnetId"),
+                "vpc_id": subnet.get("VpcId"),
+                "cidr_block": subnet.get("CidrBlock"),
+                "availability_zone": subnet.get("AvailabilityZone"),
+                "state": subnet.get("State"),
+                "tags": subnet.get("Tags", [])
+            })
 
-    def collect_security_groups(self):
-        return []
-
-    def collect_internet_gateways(self):
-        return []
-
-    def collect_nat_gateways(self):
-        return []
-
-    def collect_network_interfaces(self):
-        return []
+        return subnets
 
     def collect_all(self):
         return {
             "vpcs": self.collect_vpcs(),
             "subnets": self.collect_subnets(),
-            "route_tables": self.collect_route_tables(),
-            "security_groups": self.collect_security_groups(),
-            "internet_gateways": self.collect_internet_gateways(),
-            "nat_gateways": self.collect_nat_gateways(),
-            "network_interfaces": self.collect_network_interfaces(),
         }
