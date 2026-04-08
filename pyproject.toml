@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pathguard"
+version = "0.1.0"
+description = "Automated validation of cloud network changes"
+requires-python = ">=3.10"
+dependencies = [
+    "boto3",
+    "fastapi",
+    "uvicorn",
+]
+
+[project.scripts]
+pathguard = "pathguard.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

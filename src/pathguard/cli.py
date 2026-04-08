@@ -15,15 +15,28 @@ def analyze():
     print(f"VPCs found: {len(data['vpcs'])}")
     print(f"Subnets found: {len(data['subnets'])}")
 
+
+def serve():
+    import uvicorn
+
+    settings = get_settings()
+    uvicorn.run("pathguard.api:app", host=settings.api_host, port=settings.api_port)
+
+
 def main() -> int:
     if len(sys.argv) < 2:
-        print("Usage: py -m pathguard.cli analyze")
+        print("Usage: py -m pathguard.cli <command>")
+        print("Commands: analyze, serve")
         return 1
 
     command = sys.argv[1]
 
     if command == "analyze":
         return analyze()
+
+    if command == "serve":
+        serve()
+        return 0
 
     print(f"Unknown command: {command}")
     return 1
