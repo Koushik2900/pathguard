@@ -11,8 +11,8 @@ USERS = {
 
 
 @router.get("/users")
-def get_user(id: str = Query(..., description="The user ID to look up")):
-    user = USERS.get(id)
+def get_user(user_id: str = Query(..., alias="id", description="The user ID to look up")):
+    user = USERS.get(user_id)
     if not user:
-        raise HTTPException(status_code=404, detail=f"User with id '{id}' not found")
+        raise HTTPException(status_code=404, detail=f"User with id '{user_id}' not found")
     return user
