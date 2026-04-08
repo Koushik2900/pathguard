@@ -25,7 +25,7 @@ def serve():
 
 def main() -> int:
     if len(sys.argv) < 2:
-        print("Usage: py -m pathguard.cli <command>")
+        print("Usage: pathguard <command>")
         print("Commands: analyze, serve")
         return 1
 
